@@ -16,24 +16,22 @@ import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Consumer;
 
 /**
-	* @author <a href="mailto:josh@joshlong.com">Josh Long</a>
-	*/
+ * @author <a href="mailto:josh@joshlong.com">Josh Long</a>
+ */
 @Log4j2
 public class IoTest {
 
 	private final AtomicLong count = new AtomicLong();
 
-	private final Consumer<Bytes> bytesConsumer =
-		bytes -> this.count.getAndAccumulate(bytes.getLength(),
+	private final Consumer<Bytes> bytesConsumer = bytes -> this.count.getAndAccumulate(
+			bytes.getLength(),
 			(previousValue, updateValue) -> previousValue + updateValue);
 
 	private final Resource resource = new ClassPathResource("/data.txt");
 
 	private final Io io = new Io();
 
-	private final File file = Files
-		.createTempFile("io-test-data", ".txt")
-		.toFile();
+	private final File file = Files.createTempFile("io-test-data", ".txt").toFile();
 
 	private final CountDownLatch latch = new CountDownLatch(1);
 
@@ -49,7 +47,7 @@ public class IoTest {
 	public void before() throws IOException {
 		this.count.set(0);
 		try (InputStream in = this.resource.getInputStream();
-							OutputStream out = new FileOutputStream(this.file)) {
+				OutputStream out = new FileOutputStream(this.file)) {
 			FileCopyUtils.copy(in, out);
 		}
 	}
@@ -68,7 +66,8 @@ public class IoTest {
 
 	@Test
 	public void asynchronousRead() {
-		test(() -> this.io.asynchronousRead(this.file, this.bytesConsumer, this.onceDone));
+		test(() -> this.io.asynchronousRead(this.file, this.bytesConsumer,
+				this.onceDone));
 	}
 
 	private void test(Runnable r) {
@@ -82,4 +81,5 @@ public class IoTest {
 		}
 
 	}
+
 }

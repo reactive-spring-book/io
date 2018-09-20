@@ -8,9 +8,11 @@ import lombok.Data;
 class Bytes {
 
 	private final byte[] bytes;
+
 	private final int length;
 
 	public static Bytes from(byte[] bytes, int len) {
 		return new Bytes(bytes, len);
 	}
+
 }

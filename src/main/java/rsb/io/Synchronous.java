@@ -17,9 +17,10 @@ class Synchronous implements Reader {
 			byte[] data = new byte[FileCopyUtils.BUFFER_SIZE];
 			int res;
 			while ((res = in.read(data, 0, data.length)) != -1) { // <2>
-				consumer.accept(Bytes.from(data, res)); //<3>
+				consumer.accept(Bytes.from(data, res)); // <3>
 			}
 			f.run();
 		}
 	}
+
 }

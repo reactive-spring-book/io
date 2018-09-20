@@ -6,8 +6,6 @@ import java.util.function.Consumer;
 
 interface Reader {
 
-	class ReadFinishedException extends RuntimeException {
-	}
+	void read(File file, Consumer<Bytes> consumer, Runnable finished) throws IOException;
 
-	void read(File file, Consumer<Bytes> consumer, Runnable finished ) throws IOException;
 }

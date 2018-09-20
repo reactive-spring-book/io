@@ -18,7 +18,8 @@ class Io {
 		}
 	}
 
-	public void asynchronousRead(File source, Consumer<Bytes> onBytes, Runnable whenDone) {
+	public void asynchronousRead(File source, Consumer<Bytes> onBytes,
+			Runnable whenDone) {
 		try {
 			Asynchronous asynchronous = new Asynchronous();
 			asynchronous.read(source, onBytes, whenDone);
@@ -27,4 +28,5 @@ class Io {
 			ReflectionUtils.rethrowRuntimeException(ex);
 		}
 	}
+
 }

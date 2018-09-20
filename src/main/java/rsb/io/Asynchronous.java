@@ -19,19 +19,23 @@ import java.util.function.Consumer;
 class Asynchronous implements Reader, CompletionHandler<Integer, ByteBuffer> {
 
 	private final ExecutorService executorService = Executors.newFixedThreadPool(10);
-	private int bytesRead;
-	private long position;
-	private AsynchronousFileChannel fileChannel;
-	private Consumer<Bytes> consumer;
-	private  Runnable finished;
 
+	private int bytesRead;
+
+	private long position;
+
+	private AsynchronousFileChannel fileChannel;
+
+	private Consumer<Bytes> consumer;
+
+	private Runnable finished;
 
 	public void read(File file, Consumer<Bytes> c, Runnable finished) throws IOException {
 		this.consumer = c;
 		this.finished = finished;
 		Path path = file.toPath(); // <1>
 		this.fileChannel = AsynchronousFileChannel.open(path,
-			Collections.singleton(StandardOpenOption.READ), this.executorService); // <2>
+				Collections.singleton(StandardOpenOption.READ), this.executorService); // <2>
 		ByteBuffer buffer = ByteBuffer.allocate(FileCopyUtils.BUFFER_SIZE);
 		this.fileChannel.read(buffer, position, buffer, this); // <3>
 		while (this.bytesRead > 0) {
@@ -68,4 +72,5 @@ class Asynchronous implements Reader, CompletionHandler<Integer, ByteBuffer> {
 	public void failed(Throwable exc, ByteBuffer attachment) {
 		log.error(exc);
 	}
+
 }
