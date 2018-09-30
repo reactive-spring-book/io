@@ -1,0 +1,24 @@
+language: java
+
+services:
+- postgresql
+
+before_install:
+- ci/bin/setup-mongodb.sh
+- ci/bin/setup-postgresql.sh
+- cp .travis.settings.xml $HOME/.m2/settings.xml
+
+jdk:
+- oraclejdk8
+
+cache:
+  directories:
+  - $HOME/.m2/repository/
+  - downloads
+
+script:
+-  mvn -e verify deploy
+
+env:
+- SPRING_PROFILES_ACTIVE=ci
+
