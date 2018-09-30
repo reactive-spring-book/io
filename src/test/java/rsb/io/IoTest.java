@@ -15,9 +15,6 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Consumer;
 
-/**
- * @author <a href="mailto:josh@joshlong.com">Josh Long</a>
- */
 @Log4j2
 public class IoTest {
 
