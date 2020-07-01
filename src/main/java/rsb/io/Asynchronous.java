@@ -38,10 +38,6 @@ class Asynchronous implements Reader, CompletionHandler<Integer, ByteBuffer> {
 				Collections.singleton(StandardOpenOption.READ), this.executorService); // <2>
 		ByteBuffer buffer = ByteBuffer.allocate(FileCopyUtils.BUFFER_SIZE);
 		this.fileChannel.read(buffer, position, buffer, this); // <3>
-		while (this.bytesRead > 0) {
-			this.position = this.position + this.bytesRead;
-			this.fileChannel.read(buffer, this.position, buffer, this);
-		}
 	}
 
 	@Override
