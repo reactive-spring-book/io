@@ -1,0 +1,51 @@
+name: API
+
+env:
+
+  ARTIFACTORY_USERNAME: ${{ secrets.ARTIFACTORY_USERNAME }}
+  ARTIFACTORY_PASSWORD: ${{ secrets.ARTIFACTORY_PASSWORD }}
+
+  KINDLEGEN: /home/runner/bin/kindlegen/kindlegen
+
+  SPRING_PROFILES_ACTIVE: ci
+
+  GH_PAT: ${{ secrets.GH_PAT }}
+  GIT_PASSWORD: ${{ secrets.GIT_PASSWORD }}
+  GIT_USERNAME: ${{ secrets.GIT_USERNAME }}
+
+  PIPELINE_REPO_NAME: ${{ secrets.PIPELINE_REPO_NAME }}
+  PIPELINE_ORG_NAME: ${{ secrets.PIPELINE_ORG_NAME }}
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+
+  build:
+    runs-on: ubuntu-latest
+    steps:
+
+      - uses: actions/checkout@v2
+
+      - name: Set up JDK 15
+        uses: actions/setup-java@v1
+        with:
+          java-version: 15
+
+      - name: Cache Maven packages
+        uses: actions/cache@v1
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-m2
+          restore-keys: ${{ runner.os }}-m2
+
+      - name: Build
+        run: cd $GITHUB_WORKSPACE/.github/workflows ; ./build.sh
+
+      - name: Initiate Pipeline
+        run: |
+          curl -H "Accept: application/vnd.github.everest-preview+json" -H "Authorization: token ${GH_PAT}"  --request POST  \
+              --data '{"event_type": "update-code-event" }' https://api.github.com/repos/${PIPELINE_ORG_NAME}/${PIPELINE_REPO_NAME}/dispatches
